@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="Servis motor dan mobil yang jujur, rapi, dan tepat waktu di Tramadol Garage.">
+    <title>@yield('title', 'Tramadol Garage | Bengkel Motor & Mobil')</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #18231d;
+            --ink-soft: #34423a;
+            --paper: #f2f3ed;
+            --white: #fff;
+            --line: #dce1d8;
+            --green: #19583e;
+            --green-dark: #103927;
+            --lime: #d5f26a;
+            --coral: #e97052;
+            --muted: #6e7971;
+            --display: 'Space Grotesk', 'Arial Narrow', sans-serif;
+            --body: 'DM Sans', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); }
+        a { color: inherit; text-decoration: none; }
+        button, input { font: inherit; }
+        .site-header { position: relative; z-index: 2; background: var(--green-dark); color: var(--white); }
+        .header-inner { width: min(1200px, calc(100% - 48px)); min-height: 78px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+        .brand { display: inline-flex; align-items: center; gap: 11px; min-width: max-content; }
+        .brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; color: var(--lime); font: 700 15px var(--display); }
+        .brand-name { display: block; font: 700 16px/1.05 var(--display); letter-spacing: 0; }
+        .brand-sub { display: block; margin-top: 4px; color: #b5c6bb; font-size: 9px; font-weight: 700; letter-spacing: 1.2px; }
+        .main-nav { display: flex; align-items: center; justify-content: center; gap: 30px; color: #d3ddd5; font-size: 13px; }
+        .main-nav a:hover, .header-link:hover { color: var(--lime); }
+        .header-actions { display: flex; align-items: center; gap: 18px; font-size: 13px; }
+        .header-link { color: #e0e8e2; }
+        .button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 20px; border: 1px solid transparent; border-radius: 3px; background: var(--lime); color: var(--ink); font-size: 13px; font-weight: 700; transition: transform .18s ease, background .18s ease; }
+        .button:hover { transform: translateY(-2px); background: #e2ff82; }
+        .button-dark { background: var(--green-dark); color: var(--white); }
+        .button-dark:hover { background: var(--green); }
+        .button-outline { border-color: var(--line); background: transparent; color: var(--ink); }
+        .button-outline:hover { background: var(--white); }
+        .hero { position: relative; display: flex; align-items: center; min-height: 610px; overflow: hidden; background-image: linear-gradient(90deg, rgba(13, 30, 22, .92) 0%, rgba(13, 30, 22, .7) 48%, rgba(13, 30, 22, .12) 100%), url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=2200&q=90'); background-position: center, center 55%; background-size: cover; color: var(--white); }
+        .hero::after { position: absolute; right: 7%; bottom: 0; width: 1px; height: 78%; background: linear-gradient(transparent, rgba(213,242,106,.72)); content: ''; }
+        .hero-inner { position: relative; z-index: 1; width: min(1200px, calc(100% - 48px)); margin: 0 auto; padding: 86px 0 100px; animation: rise-in .75s ease both; }
+        .eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--lime); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+        .eyebrow::before { width: 25px; height: 1px; background: currentColor; content: ''; }
+        .hero h1 { max-width: 720px; margin: 22px 0 19px; font: 700 clamp(52px, 7vw, 88px)/.98 var(--display); letter-spacing: 0; }
+        .hero h1 span { color: var(--lime); }
+        .hero-copy { max-width: 510px; margin: 0; color: #d9e1dc; font-size: 16px; line-height: 1.75; }
+        .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-top: 32px; }
+        .text-link { color: white; font-size: 13px; font-weight: 600; }
+        .text-link span { display: inline-block; margin-left: 7px; color: var(--lime); transition: transform .18s ease; }
+        .text-link:hover span { transform: translateX(4px); }
+        .hero-note { position: absolute; right: 9%; bottom: 50px; display: flex; align-items: center; gap: 12px; color: #eef3ef; font-size: 11px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 5px rgba(213,242,106,.15); }
+        .trust-strip { display: grid; grid-template-columns: repeat(4, 1fr); width: min(1200px, calc(100% - 48px)); margin: -1px auto 0; padding: 27px 0; border-bottom: 1px solid var(--line); }
+        .trust-item { padding: 0 24px; border-right: 1px solid var(--line); }
+        .trust-item:first-child { padding-left: 0; }
+        .trust-item:last-child { border: 0; }
+        .trust-number { display: block; font: 700 22px var(--display); }
+        .trust-label { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+        .section { width: min(1200px, calc(100% - 48px)); margin: 0 auto; padding: 92px 0; }
+        .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 32px; }
+        .section-kicker { color: var(--green); font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; }
+        .section h2 { max-width: 580px; margin: 11px 0 0; font: 700 clamp(34px, 4vw, 52px)/1.05 var(--display); letter-spacing: 0; }
+        .section-intro { max-width: 365px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
+        .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .service { min-height: 216px; padding: 26px; border: 1px solid var(--line); background: rgba(255,255,255,.56); transition: background .2s ease, transform .2s ease; }
+        .service:hover { transform: translateY(-4px); background: var(--white); }
+        .service-number { color: var(--green); font: 700 12px var(--display); }
+        .service h3 { margin: 35px 0 8px; font: 700 21px var(--display); letter-spacing: 0; }
+        .service p { max-width: 300px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+        .booking-band { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 42px max(24px, calc((100vw - 1200px) / 2)); background: var(--green); color: var(--white); }
+        .booking-band h2 { max-width: 650px; margin: 0; font: 700 clamp(27px, 4vw, 43px)/1.1 var(--display); letter-spacing: 0; }
+        .booking-band p { margin: 10px 0 0; color: #d0dfd4; font-size: 13px; }
+        .site-footer { display: flex; justify-content: space-between; gap: 24px; width: min(1200px, calc(100% - 48px)); margin: auto; padding: 25px 0; color: var(--muted); font-size: 11px; }
+        .auth-wrap { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr); min-height: calc(100vh - 78px); }
+        .auth-visual { position: relative; display: flex; align-items: end; min-height: 570px; padding: 54px; overflow: hidden; background: linear-gradient(0deg, rgba(12,31,22,.88), rgba(12,31,22,.05) 75%), url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1500&q=85') center/cover; color: white; }
+        .auth-visual h1 { max-width: 520px; margin: 15px 0 10px; font: 700 clamp(39px, 5vw, 62px)/1 var(--display); letter-spacing: 0; }
+        .auth-visual p { max-width: 410px; margin: 0; color: #d8e2dc; font-size: 14px; line-height: 1.7; }
+        .auth-panel { display: flex; align-items: center; justify-content: center; padding: 54px 32px; background: var(--paper); }
+        .auth-form { width: min(100%, 420px); }
+        .auth-form h2 { margin: 0 0 8px; font: 700 35px var(--display); letter-spacing: 0; }
+        .auth-subtitle { margin: 0 0 28px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+        .form-field { display: grid; gap: 8px; margin: 0 0 17px; }
+        .form-field label { font-size: 12px; font-weight: 700; }
+        .form-field input { width: 100%; height: 48px; padding: 0 13px; border: 1px solid #cbd3ca; border-radius: 2px; outline: none; background: var(--white); color: var(--ink); font-size: 14px; }
+        .form-field input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(25,88,62,.12); }
+        .remember-row { display: flex; align-items: center; gap: 9px; margin: 2px 0 22px; color: var(--ink-soft); font-size: 12px; }
+        .remember-row input { accent-color: var(--green); }
+        .form-submit { width: 100%; cursor: pointer; }
+        .form-note { margin: 20px 0 0; color: var(--muted); text-align: center; font-size: 12px; }
+        .form-note a { color: var(--green); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+        .form-error { margin: 0 0 17px; padding: 12px 14px; border-left: 3px solid var(--coral); background: #fff0ec; color: #8b3827; font-size: 12px; line-height: 1.5; }
+        .dashboard-main { width: min(1000px, calc(100% - 48px)); min-height: calc(100vh - 150px); margin: 0 auto; padding: 100px 0; }
+        .dashboard-panel { padding: clamp(28px, 6vw, 64px); border: 1px solid var(--line); background: var(--white); }
+        .dashboard-panel h1 { margin: 12px 0; font: 700 clamp(36px, 6vw, 58px)/1.05 var(--display); letter-spacing: 0; }
+        .dashboard-panel p { max-width: 560px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+        .dashboard-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+        .logout-form { display: inline-flex; }
+        .logout-form button { cursor: pointer; }
+        @keyframes rise-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 760px) {
+            .header-inner { width: min(100% - 32px, 1200px); min-height: 70px; gap: 12px; }
+            .main-nav { display: none; }
+            .header-actions { gap: 12px; }
+            .header-link { font-size: 12px; }
+            .header-actions .button { min-height: 40px; padding: 0 12px; font-size: 11px; }
+            .hero { min-height: 610px; background-position: center, 62% center; }
+            .hero-inner { width: calc(100% - 40px); padding: 76px 0 105px; }
+            .hero h1 { font-size: clamp(48px, 13vw, 72px); }
+            .hero-copy { max-width: 390px; font-size: 14px; }
+            .hero-note { right: 22px; bottom: 25px; }
+            .trust-strip { width: calc(100% - 40px); grid-template-columns: repeat(2, 1fr); row-gap: 22px; padding: 24px 0; }
+            .trust-item { padding: 0 12px; }
+            .trust-item:nth-child(2) { border: 0; }
+            .trust-item:first-child { padding-left: 0; }
+            .section { width: calc(100% - 40px); padding: 68px 0; }
+            .section-heading { align-items: start; flex-direction: column; gap: 15px; }
+            .service-grid { grid-template-columns: 1fr; }
+            .service { min-height: 180px; }
+            .service h3 { margin-top: 23px; }
+            .booking-band { align-items: start; flex-direction: column; padding: 34px 20px; }
+            .site-footer { width: calc(100% - 40px); flex-direction: column; gap: 7px; }
+            .auth-wrap { display: block; min-height: calc(100vh - 70px); }
+            .auth-visual { min-height: 235px; padding: 28px 22px; }
+            .auth-visual h1 { max-width: 450px; font-size: 38px; }
+            .auth-visual p { font-size: 12px; }
+            .auth-panel { padding: 38px 22px 54px; }
+            .dashboard-main { width: calc(100% - 40px); padding: 54px 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="{{ route('home') }}" aria-label="Tramadol Garage, beranda">
+                <span class="brand-mark" aria-hidden="true">TK</span>
+                <span><span class="brand-name">TRAMADOL GARAGE</span><span class="brand-sub">MOTOR · MOBIL · DETAILING</span></span>
+            </a>
+            @if (request()->routeIs('home'))
+                <nav class="main-nav" aria-label="Navigasi utama">
+                    <a href="#layanan">Layanan</a>
+                    <a href="#tentang">Tentang kami</a>
+                    <a href="#kontak">Kontak</a>
+                </nav>
+            @else
+                <nav class="main-nav" aria-label="Navigasi utama">
+                    <a href="{{ route('home') }}">Beranda</a>
+                </nav>
+            @endif
+            <div class="header-actions">
+                @auth
+                    <a class="header-link" href="{{ route('dashboard') }}">Akun saya</a>
+                    <form class="logout-form" method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="button" type="submit">Keluar</button>
+                    </form>
+                @else
+                    <a class="header-link" href="{{ route('login') }}">Masuk</a>
+                    <a class="button" href="{{ route('register') }}">Buat akun</a>
+                @endauth
+            </div>
+        </div>
+    </header>
+    <main>
+        @yield('content')
+    </main>
+    @stack('scripts')
+</body>
+</html>
