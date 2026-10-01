@@ -26,12 +26,33 @@
     <section class="section" id="layanan">
         <div class="section-heading">
             <div><span class="section-kicker">Yang kami kerjakan</span><h2>Perawatan yang tepat. Tanpa tebak-tebakan.</h2></div>
-                        <p class="section-intro">Mulai dari servis berkala sampai kendaraan yang butuh perhatian ekstra, pilih perawatan sesuai kebutuhan kendaraanmu.</p>
+            <p class="section-intro">Mulai dari servis berkala sampai kendaraan yang butuh perhatian ekstra, pilih perawatan sesuai kebutuhan kendaraanmu.</p>
         </div>
+
         <div class="service-grid">
-            <article class="service"><span class="service-number">01 / MOTOR</span><h3>Servis &amp; tune up</h3><p>Oli, rem, transmisi, injeksi, dan pemeriksaan rutin untuk perjalanan sehari-hari.</p></article>
-            <article class="service"><span class="service-number">02 / MOBIL</span><h3>Mesin &amp; kaki-kaki</h3><p>Diagnosa menyeluruh, perawatan mesin, AC, spooring, dan balancing.</p></article>
-            <article class="service"><span class="service-number">03 / DETAIL</span><h3>Detailing &amp; inspeksi</h3><p>Interior lebih segar, cat terawat, serta pemeriksaan sebelum perjalanan jauh.</p></article>
+            @forelse ($services as $service)
+                <article class="service">
+                    <span class="service-number">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }} / {{ strtoupper($service->category) }}</span>
+                    <h3>{{ $service->name }}</h3>
+                    <p>{{ $service->description }}</p>
+                </article>
+            @empty
+                <article class="service">
+                    <span class="service-number">01 / MOTOR</span>
+                    <h3>Servis &amp; tune up</h3>
+                    <p>Oli, rem, transmisi, injeksi, dan pemeriksaan rutin untuk perjalanan sehari-hari.</p>
+                </article>
+                <article class="service">
+                    <span class="service-number">02 / MOBIL</span>
+                    <h3>Mesin &amp; kaki-kaki</h3>
+                    <p>Diagnosa menyeluruh, perawatan mesin, AC, spooring, dan balancing.</p>
+                </article>
+                <article class="service">
+                    <span class="service-number">03 / DETAIL</span>
+                    <h3>Detailing &amp; inspeksi</h3>
+                    <p>Interior lebih segar, cat terawat, serta pemeriksaan sebelum perjalanan jauh.</p>
+                </article>
+            @endforelse
         </div>
     </section>
 
