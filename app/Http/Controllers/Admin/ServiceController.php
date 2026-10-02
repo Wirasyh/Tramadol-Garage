@@ -7,7 +7,6 @@ use App\Models\Service;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ServiceController extends Controller
@@ -57,7 +56,6 @@ class ServiceController extends Controller
 
         Service::create([
             ...$validated,
-            'slug' => Str::slug($validated['name']),
             'is_active' => $request->boolean('is_active', true),
         ]);
 
@@ -92,7 +90,6 @@ class ServiceController extends Controller
 
         $service->update([
             ...$validated,
-            'slug' => Str::slug($validated['name']),
             'is_active' => $request->boolean('is_active', true),
         ]);
 
@@ -105,6 +102,12 @@ class ServiceController extends Controller
     public function destroy(Service $service): RedirectResponse
     {
         Gate::authorize('manage-services');
+
+        if ($service->bookings()->exists()) {
+            return back()->withErrors([
+                'service' => 'Layanan tidak dapat dihapus karena sudah memiliki booking.',
+            ]);
+        }
 
         $service->delete();
 

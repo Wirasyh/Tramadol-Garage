@@ -17,6 +17,10 @@
                 <div class="form-error" style="border-left-color: var(--green); background:#edf9f1; color:#1f5d3d; margin-bottom:20px;">{{ session('success') }}</div>
             @endif
 
+            @if ($errors->any())
+                <div class="form-error" role="alert">{{ $errors->first() }}</div>
+            @endif
+
             <div style="display:grid; gap:16px;">
                 @foreach ($services as $service)
                     <article style="border:1px solid var(--line); background:var(--white); padding:24px; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;">

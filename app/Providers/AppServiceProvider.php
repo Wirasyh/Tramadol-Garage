@@ -24,5 +24,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage-services', function (User $user): bool {
             return $user->isAdmin();
         });
+
+        Gate::define('manage-bookings', function (User $user): bool {
+            return $user->isAdmin();
+        });
     }
 }

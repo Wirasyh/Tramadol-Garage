@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Service;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class BookingController extends Controller
@@ -38,7 +39,10 @@ class BookingController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'service_id' => ['required', 'exists:services,id'],
+            'service_id' => [
+                'required',
+                Rule::exists((new Service)->getTable(), 'id')->where('is_active', true),
+            ],
             'customer_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
             'vehicle_type' => ['required', 'in:motor,mobil'],

@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Booking extends Model
 {
+    public const STATUSES = ['pending', 'confirmed', 'completed', 'cancelled'];
+
     /** @use HasFactory<BookingFactory> */
     use HasFactory;
 

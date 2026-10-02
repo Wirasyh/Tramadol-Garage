@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Service extends Model
@@ -30,12 +31,29 @@ class Service extends Model
 
     protected static function booted(): void
     {
-        static::creating(function (self $service): void {
-            $service->slug ??= Str::slug($service->name);
-        });
+        static::saving(function (self $service): void {
+            if (! $service->isDirty('name') && filled($service->slug)) {
+                return;
+            }
 
-        static::updating(function (self $service): void {
-            $service->slug ??= Str::slug($service->name);
+            $baseSlug = Str::slug($service->name) ?: 'service';
+            $slug = $baseSlug;
+            $suffix = 2;
+
+            while (static::query()
+                ->where('slug', $slug)
+                ->when($service->exists, fn ($query) => $query->whereKeyNot($service->getKey()))
+                ->exists()) {
+                $slug = $baseSlug.'-'.$suffix;
+                $suffix++;
+            }
+
+            $service->slug = $slug;
         });
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
     }
 }

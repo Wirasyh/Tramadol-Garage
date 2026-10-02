@@ -12,6 +12,7 @@
                 <a class="button button-dark" href="{{ route('home') }}#layanan">Lihat layanan <span aria-hidden="true">→</span></a>
                 <a class="button button-outline" href="{{ route('bookings.create') }}">Buat booking</a>
                 @if (auth()->user()->isAdmin())
+                    <a class="button button-outline" href="{{ route('admin.bookings.index') }}">Kelola booking</a>
                     <a class="button button-outline" href="{{ route('admin.services.index') }}">Kelola layanan</a>
                 @endif
                 <form class="logout-form" method="POST" action="{{ route('logout') }}">
